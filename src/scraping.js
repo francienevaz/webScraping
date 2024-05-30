@@ -7,7 +7,7 @@ function delay(time) {
 
 async function getIrradiacaoSolar(lat, lon) {
   const browser = await puppeteer.launch({
-    headless: false, // Set to non-headless for debugging
+    headless: true, // Set to non-headless for debugging
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
     ignoreHTTPSErrors: true
   });
@@ -18,19 +18,6 @@ async function getIrradiacaoSolar(lat, lon) {
 
     // Wait for the page to load for 5 seconds
     await delay(5000);
-
-    // Ensure selector is correct with a 60 second timeout
-    // await page.waitForSelector('a[href="javascript:potencialEnergetico()"]', { timeout: 60000 });
-    // await page.click('a[href="javascript:potencialEnergetico()"]');
-
-    // Additional wait if necessary
-    // await page.waitForTimeout(5000);
-
-    // await page.waitForSelector('a[href="javascript:potencialSolar()"]', { timeout: 60000 });
-    // await page.click('a[href="javascript:potencialSolar()"]');
-
-    // Wait for next page to load
-    // await page.waitForTimeout(5000);
 
     await page.waitForSelector('#latitude_dec', { timeout: 60000 });
     await page.type('#latitude_dec', lat);
@@ -45,14 +32,15 @@ async function getIrradiacaoSolar(lat, lon) {
     await page.waitForSelector('#data_output', { timeout: 60000 });
 
     const taxaDeIrradiacao = await page.evaluate(() => {
+      const tbPlanoInclinado = document.querySelectorAll(".tb_sundata")[0];
       const tabela = document.querySelector('#data_output');
-      const linhas = tabela.querySelectorAll('tr');
+      const linhas = tbPlanoInclinado.querySelectorAll('tr');
       let menorMedia = Infinity;
 
       linhas.forEach(linha => {
         const colunas = linha.querySelectorAll('td');
         if (colunas.length > 0) {
-          const media = parseFloat(colunas[6].innerText.replace(',', '.'));
+          const media = parseFloat(colunas[15].innerText.replace(',', '.'));
           if (media < menorMedia) {
             menorMedia = media;
           }
@@ -63,7 +51,7 @@ async function getIrradiacaoSolar(lat, lon) {
     });
 
     // Comment out to keep the browser open for debugging
-    // await browser.close();
+    await browser.close();
     return taxaDeIrradiacao;
   } catch (error) {
     console.error('Erro ao realizar o scraping:', error.message);
