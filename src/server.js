@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const { getLatLongFromCEP } = require('./conversion');
 const { getIrradiacaoSolar } = require('./scraping');
+const { setTaxaDeIrradiacao } = require('./scrapingResult');
 
 const app = express();
 const PORT = 3000;
@@ -18,6 +19,7 @@ app.get('/scrape/:cep', async (req, res) => {
     if (coordinates) {
         const { lat, lon } = coordinates;
         const taxaDeIrradiacao = await getIrradiacaoSolar(lat, lon);
+        setTaxaDeIrradiacao(taxaDeIrradiacao);
         res.json({ cep, lat, lon, taxaDeIrradiacao });
     } else {
         res.status(500).json({ error: 'Falha ao obter coordenadas para o CEP fornecido.' });

@@ -33,7 +33,7 @@ async function getIrradiacaoSolar(lat, lon) {
 
     const taxaDeIrradiacao = await page.evaluate(() => {
       const tbPlanoInclinado = document.querySelectorAll(".tb_sundata")[0];
-      const tabela = document.querySelector('#data_output');
+      // const tabela = document.querySelector('#data_output');
       const linhas = tbPlanoInclinado.querySelectorAll('tr');
       let menorMedia = Infinity;
 

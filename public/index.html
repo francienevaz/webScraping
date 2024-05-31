@@ -5,19 +5,22 @@
     <meta charset="UTF-8">
     <title>CEP Scraping</title>
     <script>
-        async function scrapeCEP() {
-            const cep = document.getElementById('cep').value;
-            const response = await fetch(`/scrape/${cep}`);
-            const data = await response.json();
-            console.log(data);
-            document.getElementById('result').innerText = JSON.stringify(data, null, 2);
-        }
+        // async function scrapeCEP() {
+        //     const cep = document.getElementById('cep').value;
+        //     const response = await fetch(`/scrape/${cep}`);
+        //     const data = await response.json();
+        //     console.log(data);
+        //     document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+        // }
     </script>
 </head>
 <body>
     <h1>Scrape CEP</h1>
     <input type="text" id="cep" placeholder="Digite o CEP">
-    <button onclick="scrapeCEP()">Buscar</button>
+    <h2>Média do consumo mensal em KW</h2>
+    <input type="text" id="consumo" placeholder="Digite o seu consumo mensal em KW">
+    <button id="calcular">Simular</button>
     <pre id="result"></pre>
 </body>
+<script src="./solarPanels.js"></script>
 </html>
